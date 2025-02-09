@@ -7,8 +7,8 @@ const {getallusers, createuser, userlogin, finduser, edituser, deleteuser} = req
 router.get ('/users',getallusers)
 router.post ('/createuser',createuser)
 router.post ('/login',userlogin)
-router.get ('/finduser',finduser)
+router.get ('/finduser/:user',finduser)
 router.put ('/edituser',edituser)
-router.delete ('/deleteuser',deleteuser)
+router.post ('/deleteuser',deleteuser)
 
 module.exports = router

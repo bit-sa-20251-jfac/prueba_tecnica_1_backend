@@ -85,7 +85,8 @@ const userlogin = async (req, res) => {
 }
 
 const finduser = async (req, res) => {
-    const { username } = req.body
+    const { username } = {username : req.params.user};
+    
     if (!username) {
         return res.status(400).json({
             msg: "ingrese un usuario"
@@ -133,7 +134,9 @@ const edituser = async (req, res) => {
 }
 
 const deleteuser = async (req, res) => {
+
     const { username, password } = req.body
+    console.log(`${username} ${password}`);
     if (!password) {
         return res.status(400).json({
             msg: "Ponga una contraseña"
