@@ -9,6 +9,6 @@ router.post ('/createuser',createuser)
 router.post ('/login',userlogin)
 router.get ('/finduser/:user',finduser)
 router.put ('/edituser',edituser)
-router.post ('/deleteuser',deleteuser)
+router.delete ('/deleteuser/:user',deleteuser)
 
 module.exports = router

@@ -86,7 +86,7 @@ const userlogin = async (req, res) => {
 
 const finduser = async (req, res) => {
     const { username } = {username : req.params.user};
-    
+
     if (!username) {
         return res.status(400).json({
             msg: "ingrese un usuario"
@@ -99,7 +99,7 @@ const finduser = async (req, res) => {
                 msg: "Usuario no encontrado"
             })
         }
-        return res.status(200).json({ usuario: user.username, contraseña: user.password })
+        return res.status(200).json({ usuario: user.username, id: user._id })
 
     } catch (error) {
         console.log(error);
@@ -121,7 +121,7 @@ const edituser = async (req, res) => {
         const user = await User.findOne({ username })
         user.password = password
         await user.save()
-        return res.status(400).json({
+        return res.status(200).json({
             msg: "constraseña editada exitosamente"
         })
 
@@ -135,20 +135,11 @@ const edituser = async (req, res) => {
 
 const deleteuser = async (req, res) => {
 
-    const { username, password } = req.body
-    console.log(`${username} ${password}`);
-    if (!password) {
-        return res.status(400).json({
-            msg: "Ponga una contraseña"
-        })
-    }
+    const { username } = {username : req.params.user};
+  
     try {
         const user = await User.findOne({ username })
-        if (user.password !== password) {
-            return res.status(400).json({
-                msg: "La constraseña no coincide"
-            })
-        }
+        
             await User.deleteOne({ username })
             return res.status (200).json({
                 msg: "Usuario eliminado exitosamente"
