@@ -12,3 +12,5 @@ router.put ('/edituser',edituser)
 router.delete ('/deleteuser/:user',deleteuser)
 
 module.exports = router
+
+

@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken')
 
 
-
-
 const generateToken = (userData = {}) => {
     try {
         const secret = process.env.SECRET_KEY

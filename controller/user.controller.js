@@ -16,35 +16,45 @@ const getallusers = async (req, res) => {
 }
 
 const createuser = async (req, res) => {
-
-    const { username, password } = req.body
-    if (!username || !password) {
-        return res.status(400).json({
-            msg: "ingrese usuario o contraseña"
-        })
-    }
     try {
-        const user = await User.findOne({ username })
-        if (user) {
-            return res.status(400).json({
-                msg: "El usuario ya existe"
-            })
+        const { username, password, clients, pedidos, productos, transportistas, rutas, estado_de_envio, categorias } = req.body;
+
+        // Validación de campos obligatorios
+        if (!username || !password) {
+            return res.status(400).json({ msg: "Ingrese usuario y contraseña" });
         }
-        const DBuser = new User({
-            username: username,
-            password: password
-        })
-        await DBuser.save()
-        return res.status(200).json({
-            msg: "El usuario se ha creado"
-        })
+
+        // Verificar si el usuario ya existe
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ msg: "El usuario ya existe" });
+        }
+
+        // Crear el usuario con los datos adicionales
+        const newUser = new User({
+            username,
+            password,
+            clients: clients || [], // Si no se envían, usa el valor por defecto []
+            pedidos: pedidos || [],
+            productos: productos || [],
+            transportistas: transportistas || [],
+            rutas: rutas || [],
+            estado_de_envio: estado_de_envio || [],
+            categorias: categorias || [],
+        });
+
+        await newUser.save();
+
+        return res.status(201).json({
+            msg: "El usuario se ha creado correctamente",
+            user: newUser
+        });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            msg: "Ha ocurrido un error inesperado"
-        })
+        console.error("Error en createuser:", error);
+        return res.status(500).json({ msg: "Ha ocurrido un error inesperado" });
     }
-}
+};
+
 
 
 
@@ -99,7 +109,7 @@ const finduser = async (req, res) => {
                 msg: "Usuario no encontrado"
             })
         }
-        return res.status(200).json({ usuario: user.username, id: user._id })
+        return res.status(200).json({ usuario: user.username, id: user._id, estado_de_envio: user.estado_de_envio, pedidos: user.pedidos, productos: user.productos, transportistas: user.transportistas, rutas: user.rutas, clients: user.clients, categorias: user.categorias })
 
     } catch (error) {
         console.log(error);
@@ -111,18 +121,15 @@ const finduser = async (req, res) => {
 }
 
 const edituser = async (req, res) => {
-    const { username, password } = req.body
-    if (!password) {
-        return res.status(400).json({
-            msg: "Ponga una contraseña"
-        })
-    }
+    const { username, estado_de_envio } = req.body
+   console.log(estado_de_envio);
+   
     try {
         const user = await User.findOne({ username })
-        user.password = password
+        user.estado_de_envio = estado_de_envio
         await user.save()
         return res.status(200).json({
-            msg: "constraseña editada exitosamente"
+            msg: "Estado de envio actualizado",
         })
 
     } catch (error) {
